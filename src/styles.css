@@ -1,0 +1,108 @@
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+
+body {
+	background: rgb(147, 58, 230);
+	font-family: "Press Start 2P", cursive;
+	/* background: linear-gradient(45deg, #d338cb, #933ae6); */
+}
+
+.leaderboard {
+	top: 43.2%;
+	left: 30%;
+}
+
+.playArea {
+	border: 5px solid transparent;
+	width: 585px;
+	height: 440px;
+	position: fixed;
+	top: 43.2%;
+	left: 70%;
+	transform: translate(-50%, -50%);
+}
+
+#fruit {
+	display: none;
+}
+
+.gameOver {
+	position: fixed;
+	top: 43.2%;
+	left: 70%;
+	transform: translate(-50%, -50%);
+	color: white;
+	font-size: 35px;
+}
+
+.container {
+	position: relative;
+}
+
+.playButton {
+	position: absolute;
+	top: 69%;
+	left: 68%;
+	padding: 10px 20px;
+	border: none;
+	border-radius: 50px;
+	background-color: #d36eec;
+	color: #ffffff;
+	cursor: pointer;
+	transition: background-color 0.3s, transform 0.3s;
+	font-size: 20px;
+	font-weight: bold;
+	text-transform: uppercase;
+	box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.connectButton {
+	position: absolute;
+	top: 69%;
+	left: 55%;
+	padding: 10px 20px;
+	border: none;
+	border-radius: 50px;
+	background-color: #d36eec;
+	color: #ffffff;
+	cursor: pointer;
+	transition: background-color 0.3s, transform 0.3s;
+	font-size: 20px;
+	font-weight: bold;
+	text-transform: uppercase;
+	box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.playButton:hover,
+.connectButton:hover {
+	background-color: #7c2ed7;
+	transform: scale(1.05);
+}
+
+.playButton:active,
+.connectButton:active {
+	background-color: #5b24a2;
+	transform: scale(0.95);
+}
+
+.scoreBox {
+	position: absolute;
+	color: white;
+	/* border: 1px solid black; */
+	position: absolute;
+	top: 5%;
+	left: 54.5%;
+	/* -webkit-box-shadow: 0px 4px 13px 0px rgba(48, 26, 74, 0.63);
+	 box-shadow: 0px 4px 13px 0px rgba(48, 26, 74, 0.63); */
+}
+
+h2 {
+	font-size: 30px;
+	padding: 10px;
+}
+
+.snakeTail {
+	background: linear-gradient(45deg, #933ae6, #d36eec);
+	background-clip: text;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
