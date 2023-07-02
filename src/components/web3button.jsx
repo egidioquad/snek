@@ -33,7 +33,7 @@ class Dashboard extends React.Component {
 				}, async () => {
 					const btcAddress = this.state.paymentAddress;
 					try {
-						const userResponse = await fetch(`/api/userDatas/${btcAddress}`);
+						const userResponse = await fetch(`/src/app/api/userDatas/${btcAddress}`);
 						if (!userResponse.ok) {
 							throw new Error(`Error: ${userResponse.status}`);
 						}
@@ -41,7 +41,7 @@ class Dashboard extends React.Component {
 						console.log('User:', user);
 						if (!user) {
 							const highscore = 0; // Set initial highscore to 0
-							const postResponse = await fetch(`/api/userDatas/${btcAddress}`, {
+							const postResponse = await fetch(`/src/app/api/userDatas/${btcAddress}`, {
 								method: 'POST',
 								headers: {
 									'Content-Type': 'application/json',

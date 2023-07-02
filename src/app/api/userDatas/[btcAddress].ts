@@ -6,6 +6,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	try {
 		await connectMongoDB();
 
+		console.log('Request method:', req.method);
+		console.log('Request query:', req.query);
+		console.log('Request body:', req.body);
+
 		if (req.method === 'POST') {
 			const { btcAddress, highscore } = req.body;
 
@@ -24,7 +28,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			}
 		} else if (req.method === 'GET') {
 			const { btcAddress } = req.query;
-			res.status(400).json({ message: "btcAddress is required" });
 
 			// Check if btcAddress is provided
 			if (!btcAddress) {
