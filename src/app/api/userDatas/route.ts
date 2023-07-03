@@ -1,47 +1,51 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import connectMongoDB from '@/libs/mongodb';
-import UserData from '@/models/UserData';
+import connectMongoDB from "@/libs/mongodb";
+import UserData from "@/models/UserData";
+import error from "console";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextApiRequest, res: NextApiResponse) {
+interface Params {
+	btcAddress: string;
+	highscore: number;
+}
+
+export async function GET(request: NextRequest): Promise<NextResponse> {
 	await connectMongoDB();
-
-	const btcAddress = req.query.btcAddress;
-
-	if (!btcAddress) {
-		res.status(400).json({ message: 'No btcAddress provided' });
-		return;
-	}
-
+	const user = await UserData.find();
+	return NextResponse.json({ user });
+}
+export async function POST(request: NextRequest): Promise<NextResponse> {
 	try {
-		const user = await UserData.findOne({ btcAddress: btcAddress });
-		if (user) {
-			res.status(200).json({ user });
-		} else {
-			res.status(404).json({ message: 'User not found' });
-		}
+		console.log("post in");
+		const { btcAddress, highscore } = await request.json();
+		await connectMongoDB();
+		await UserData.create({ btcAddress, highscore });
+		return NextResponse.json({ message: "UserData Created" }, { status: 201 });
 	} catch (error) {
-		console.error('Error fetching user data:', error);
-		res.status(500).json({ message: 'Error fetching user data' });
+		console.error(error);
+		return NextResponse.json({ message: "Error creating UserData", error }, { status: 500 });
 	}
 }
 
 
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
+/* export async function POST(request: NextRequest, { params }: { params: Params }): Promise<NextResponse<unknown> | undefined> {
 	await connectMongoDB();
-
-	const { btcAddress, highscore } = req.body;
+	const { btcAddress, highscore } = params;
 
 	try {
 		const user = await UserData.findOne({ btcAddress: btcAddress });
 
 		if (!user) {
 			await UserData.create({ btcAddress, highscore });
-			res.status(201).json({ message: 'UserData Created' });
+
+			//res.status(201).json({ message: 'UserData Created' });
 		} else {
-			res.status(400).json({ message: 'User already exists' });
+			//res.status(400).json({ message: 'User already exists' });
 		}
+		return NextResponse.json({ message: "UserData Created" }, { status: 201 });
 	} catch (error) {
 		console.error('Error creating user data:', error);
-		res.status(500).json({ message: 'Error creating user data' });
+		//res.status(500).json({ message: 'Error creating user data' });
 	}
+	return undefined;
 }
+*/

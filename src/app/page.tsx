@@ -7,10 +7,10 @@ const App: React.FC = () => {
 	return (
 		<div>
 
-			<SnakeGame />
+
 			<Dashboard />
 		</div>
 	);
 }
-//  <Leaderboard />
+//  <Leaderboard />			<SnakeGame />
 export default App;

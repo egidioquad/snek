@@ -1,52 +1,52 @@
 import connectMongoDB from "@/libs/mongodb";
 import UserData from "@/models/UserData";
-import { NextApiRequest, NextApiResponse } from "next";
+import error from "console";
+import { NextRequest, NextResponse } from "next/server";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-	try {
-		await connectMongoDB();
 
-		console.log('Request method:', req.method);
-		console.log('Request query:', req.query);
-		console.log('Request body:', req.body);
+interface Params {
+	btcAddress: string;
+	highscore: number;
+}
 
-		if (req.method === 'POST') {
-			const { btcAddress, highscore } = req.body;
-
-			// Check if btcAddress and highscore are provided
-			if (!btcAddress || !highscore) {
-				return res.status(400).json({ message: "btcAddress and highscore are required" });
-			}
-
+export async function GET(request: NextRequest, { params }: { params: Params }): Promise<NextResponse<unknown> | undefined> {
+	await connectMongoDB();
+	const { btcAddress } = params;
+	console.log("masha");
+	if (!btcAddress) {
+		//res.status(400).json({ message: 'No btcAddress provided' });
+		console.error({ message: "No btcAddress provided" });
+	} else {
+		try {
 			const user = await UserData.findOne({ btcAddress: btcAddress });
-
-			if (!user) {
-				await UserData.create({ btcAddress, highscore });
-				return res.status(201).json({ message: "UserData Created" });
+			if (user) {
+				return NextResponse.json({ user }, { status: 200 });
 			} else {
-				return res.status(200).json({ message: "User already exists", user });
+				console.error({ message: 'User not found' });
+				return NextResponse.json({ message: 'User not found' }, { status: 404 })
 			}
-		} else if (req.method === 'GET') {
-			const { btcAddress } = req.query;
+		} catch (error) {
 
-			// Check if btcAddress is provided
-			if (!btcAddress) {
-				return res.status(400).json({ message: "btcAddress is required" });
-			}
+			return NextResponse.json({ message: 'User not found' }, { status: 404 })
 
-			const user = await UserData.findOne({ btcAddress: btcAddress });
-
-			// Check if user exists
-			if (!user) {
-				return res.status(404).json({ message: "User not found" });
-			}
-
-			return res.status(200).json({ user });
-		} else {
-			return res.status(405).end(); // Method Not Allowed
 		}
-	} catch (error) {
-		console.error(error);
-		return res.status(500).json({ message: "Internal Server Error" });
+
 	}
+	return undefined;
+}
+
+export async function PUT(request: NextRequest, { params }: { params: Params }): Promise<NextResponse<unknown> | undefined> {
+	const { btcAddress } = params;
+	const { newHighscore: highscore } = await request.json();
+	await connectMongoDB();
+
+	const existingUserData = await UserData.findOne({ btcAddress: btcAddress });
+	if (!existingUserData) {
+		return NextResponse.json({ message: "UserData not found" }, { status: 404 });
+	}
+
+	existingUserData.highscore = highscore;
+	await existingUserData.save();
+
+	return NextResponse.json({ message: "UserData updated" }, { status: 200 });
 }

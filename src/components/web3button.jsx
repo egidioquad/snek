@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { getAddress, signTransaction, signMessage } from "sats-connect";
-import { GET, POST } from "../app/api/userDatas/route";
 
 class Dashboard extends React.Component {
 	constructor(props) {
@@ -33,39 +32,49 @@ class Dashboard extends React.Component {
 				}, async () => {
 					const btcAddress = this.state.paymentAddress;
 					try {
-						const userResponse = await fetch(`/api/userDatas/${btcAddress}`);
+						console.log("TRY GET"); //
+						const userResponse = await fetch(`/api/userDatas/${btcAddress}`, {
+							method: 'GET',
+						});
+						console.log("after GET");
 						if (!userResponse.ok) {
-							throw new Error(`Error: ${userResponse.status}`);
+							if (userResponse.status === 404) {
+								const highscore = 0; // Set initial highscore to 0
+								const postResponse = await fetch(`/api/userDatas/${btcAddress}`, {
+									method: 'POST',
+									headers: {
+										'Content-Type': 'application/json',
+									},
+									body: JSON.stringify({ btcAddress, highscore }),
+								});
+								if (!postResponse.ok) {
+									console.log("trow error");
+									throw new Error(`Error: ${postResponse.status}`);
+								}
+								console.log('POST function called');
+								return;
+							}
+							throw new Error(`ErrorEE: ${userResponse.status}`);
 						}
 						const user = await userResponse.json();
 						console.log('User:', user);
-						if (!user) {
-							const highscore = 0; // Set initial highscore to 0
-							const postResponse = await fetch(`/api/userDatas/${btcAddress}`, {
-								method: 'POST',
-								headers: {
-									'Content-Type': 'application/json',
-								},
-								body: JSON.stringify({ btcAddress, highscore }),
-							});
-							if (!postResponse.ok) {
-								throw new Error(`Error: ${postResponse.status}`);
-							}
-							console.log('POST function called');
-						} else {
-							// Load user data
-							this.setState({
-								highscore: user.highscore,
-							});
-						}
-					} catch (error) {
+						// Load user data
+						console.log("krarka");
+						this.setState({
+							highscore: user.highscore,
+						});
+					}
+					catch (error) {
+						console.log("catch error");
 						console.error("Error fetching user data:", error);
 					}
 				});
 			},
 			onCancel: () => alert("Request canceled"),
 		};
+		console.log("mashallah");
 		await getAddress(getAddressOptions);
+		console.log("mashallah");
 	};
 
 
