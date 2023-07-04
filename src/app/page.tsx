@@ -1,4 +1,4 @@
-import Leaderboard from "../components/leaderboard";
+import Leaderboard from "@/components/leaderboard";
 import SnakeGame from "@/components/snake";
 import Dashboard from "@/components/web3button";
 import React from "react";

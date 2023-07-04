@@ -39,8 +39,12 @@
 		"src/models/UserData.ts",
 		"src/components/web3button.jsx",
 		"src/components/leaderboard.tsx",
-		"src/app/api/userDatas/[btcAddress]/*.ts",
-		"src/app/api/userDatas/*.ts"
+		"src/app/pages/api/userDatas/[btcAddress]/*.ts",
+		"src/app/pages/api/userDatas/*.ts",
+		"src/app/pages/*.tsx",
+		"src/app/pages/page.tsx",
+		"src/app/*.tsx",
+		"src/*.css"
 	],
 	"exclude": [
 		"node_modules"

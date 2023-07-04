@@ -10,14 +10,16 @@ interface Params {
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
 	await connectMongoDB();
+	console.log("route.ts get");
 	const user = await UserData.find();
 	return NextResponse.json({ user });
 }
 export async function POST(request: NextRequest): Promise<NextResponse> {
 	try {
-		console.log("post in");
-		const { btcAddress, highscore } = await request.json();
 		await connectMongoDB();
+		console.log("route.ts POST");
+		const { btcAddress, highscore } = await request.json();
+
 		await UserData.create({ btcAddress, highscore });
 		return NextResponse.json({ message: "UserData Created" }, { status: 201 });
 	} catch (error) {

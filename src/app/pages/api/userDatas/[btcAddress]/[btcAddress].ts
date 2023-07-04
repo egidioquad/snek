@@ -9,10 +9,10 @@ interface Params {
 	highscore: number;
 }
 
-export async function GET(request: NextRequest, { params }: { params: Params }): Promise<NextResponse<unknown> | undefined> {
+export default async function GET(request: NextRequest, { params }: { params: Params }): Promise<NextResponse> {
 	await connectMongoDB();
 	const { btcAddress } = params;
-	console.log("masha");
+	console.log("get this shi");
 	if (!btcAddress) {
 		//res.status(400).json({ message: 'No btcAddress provided' });
 		console.error({ message: "No btcAddress provided" });
@@ -30,15 +30,16 @@ export async function GET(request: NextRequest, { params }: { params: Params }):
 			return NextResponse.json({ message: 'User not found' }, { status: 404 })
 
 		}
-
 	}
-	return undefined;
+	return NextResponse.json({ message: 'User not found' }, { status: 404 })
+
 }
 
 export async function PUT(request: NextRequest, { params }: { params: Params }): Promise<NextResponse<unknown> | undefined> {
+	await connectMongoDB();
 	const { btcAddress } = params;
 	const { newHighscore: highscore } = await request.json();
-	await connectMongoDB();
+
 
 	const existingUserData = await UserData.findOne({ btcAddress: btcAddress });
 	if (!existingUserData) {
@@ -50,3 +51,16 @@ export async function PUT(request: NextRequest, { params }: { params: Params }):
 
 	return NextResponse.json({ message: "UserData updated" }, { status: 200 });
 }
+
+/* export async function POST(request: NextRequest): Promise<NextResponse> {
+	try {
+		console.log("post in");
+		const { btcAddress, highscore } = await request.json();
+		await connectMongoDB();
+		await UserData.create({ btcAddress, highscore });
+		return NextResponse.json({ message: "UserData Created" }, { status: 201 });
+	} catch (error) {
+		console.error(error);
+		return NextResponse.json({ message: "Error creating UserData", error }, { status: 500 });
+	}
+} */

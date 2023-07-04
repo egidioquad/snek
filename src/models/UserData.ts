@@ -1,10 +1,9 @@
 import mongoose, { Schema, Model } from "mongoose"
 
 const userDataSchema = new mongoose.Schema({
-	btcAddress: { type: String, required: true }, // Add index: true here , index: true 
-	highscore: { type: Number, required: true },
-});
-
+	btcAddress: String,
+	highscore: Number
+}, { timestamps: true });
 
 let UserData: Model<any>;
 

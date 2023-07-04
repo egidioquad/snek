@@ -35,12 +35,13 @@ class Dashboard extends React.Component {
 						console.log("TRY GET"); //
 						const userResponse = await fetch(`/api/userDatas/${btcAddress}`, {
 							method: 'GET',
+
 						});
 						console.log("after GET");
 						if (!userResponse.ok) {
 							if (userResponse.status === 404) {
 								const highscore = 0; // Set initial highscore to 0
-								const postResponse = await fetch(`/api/userDatas/${btcAddress}`, {
+								const postResponse = await fetch(`/pages/api/userDatas/`, {
 									method: 'POST',
 									headers: {
 										'Content-Type': 'application/json',
