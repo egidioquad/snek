@@ -39,7 +39,7 @@
 		"src/models/UserData.ts",
 		"src/components/web3button.jsx",
 		"src/components/leaderboard.tsx",
-		"src/app/pages/api/userDatas/[btcAddress]/*.ts",
+		"src/app/pages/api/userDatas/btc/*.ts",
 		"src/app/pages/api/userDatas/*.ts",
 		"src/app/pages/*.tsx",
 		"src/app/pages/page.tsx",

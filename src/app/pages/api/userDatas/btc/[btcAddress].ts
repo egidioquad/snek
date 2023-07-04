@@ -1,41 +1,39 @@
 import connectMongoDB from "@/libs/mongodb";
 import UserData from "@/models/UserData";
 import error from "console";
-import { NextRequest, NextResponse } from "next/server";
+import mongoose from "mongoose";
+import { NextApiRequest, NextApiResponse } from "next";
 
-
-interface Params {
+/* interface Params {
 	btcAddress: string;
 	highscore: number;
-}
+} */
 
-export default async function GET(request: NextRequest, { params }: { params: Params }): Promise<NextResponse> {
-	await connectMongoDB();
-	const { btcAddress } = params;
-	console.log("get this shi");
-	if (!btcAddress) {
-		//res.status(400).json({ message: 'No btcAddress provided' });
-		console.error({ message: "No btcAddress provided" });
-	} else {
-		try {
-			const user = await UserData.findOne({ btcAddress: btcAddress });
-			if (user) {
-				return NextResponse.json({ user }, { status: 200 });
-			} else {
-				console.error({ message: 'User not found' });
-				return NextResponse.json({ message: 'User not found' }, { status: 404 })
-			}
-		} catch (error) {
+console.log('btcAddress.ts file loaded');
 
-			return NextResponse.json({ message: 'User not found' }, { status: 404 })
+export default async function handleSearch(req: NextApiRequest, res: NextApiResponse) {
+	const { btcAddress } = req.query;
+	console.log("API route reached:", req.url);
+	console.log(btcAddress);
+	try {
+		await connectMongoDB();
 
+		const collection = mongoose.connection.collection("userdatas");
+
+		const entry = await collection.findOne({ btcAddress });
+		console.log(entry);
+		if (!entry) {
+			return res.status(404).json({ message: "chi cerca trova" });
 		}
+		return res.status(200).json({ entry });
+	} catch (error) {
+		console.error(error);
+		return res.status(500).json({ message: "Internal server error" });
 	}
-	return NextResponse.json({ message: 'User not found' }, { status: 404 })
-
 }
 
-export async function PUT(request: NextRequest, { params }: { params: Params }): Promise<NextResponse<unknown> | undefined> {
+
+/* export async function PUT(request: NextRequest, { params }: { params: Params }): Promise<NextResponse<unknown> | undefined> {
 	await connectMongoDB();
 	const { btcAddress } = params;
 	const { newHighscore: highscore } = await request.json();
@@ -50,7 +48,7 @@ export async function PUT(request: NextRequest, { params }: { params: Params }):
 	await existingUserData.save();
 
 	return NextResponse.json({ message: "UserData updated" }, { status: 200 });
-}
+} */
 
 /* export async function POST(request: NextRequest): Promise<NextResponse> {
 	try {

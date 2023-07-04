@@ -33,11 +33,8 @@ class Dashboard extends React.Component {
 					const btcAddress = this.state.paymentAddress;
 					try {
 						console.log("TRY GET"); //
-						const userResponse = await fetch(`/api/userDatas/${btcAddress}`, {
-							method: 'GET',
-
-						});
-						console.log("after GET");
+						const userResponse = await fetch(`/api/userDatas/btc/${btcAddress}`);
+						console.log(userResponse);
 						if (!userResponse.ok) {
 							if (userResponse.status === 404) {
 								const highscore = 0; // Set initial highscore to 0

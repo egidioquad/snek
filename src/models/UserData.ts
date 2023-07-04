@@ -1,6 +1,6 @@
-import mongoose, { Schema, Model } from "mongoose"
+import mongoose, { Schema, Model } from "mongoose";
 
-const userDataSchema = new mongoose.Schema({
+const userDataSchema = new Schema({
 	btcAddress: String,
 	highscore: Number
 }, { timestamps: true });
@@ -10,7 +10,7 @@ let UserData: Model<any>;
 try {
 	UserData = mongoose.model("UserData");
 } catch {
-	UserData = mongoose.model("UserData", userDataSchema);
+	UserData = mongoose.models.UserData || mongoose.model("UserData", userDataSchema, "userdatas");
 }
 
 export default UserData;
