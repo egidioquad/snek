@@ -1,0 +1,20 @@
+import { useRouter } from "next/router";
+
+export default function YourPageComponent() {
+	const router = useRouter();
+
+	const handleSearch = (event) => {
+		event.preventDefault();
+		const { btcAddress } = event.target.elements;
+		router.push(`/yourpage/${btcAddress.value}`);
+	};
+
+	return (
+		<div>
+		<form onSubmit= { handleSearch } >
+		<input type="text" name = "btcAddress" />
+			<button type="submit" > Search < /button>
+				< /form>
+				< /div>
+  );
+}

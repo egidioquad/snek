@@ -1,0 +1,50 @@
+import { NextApiRequest, NextApiResponse } from "next";
+import { useRouter } from "next/router";
+import { MongoClient } from "mongodb";
+
+export default async function handleSearch(
+	req: NextApiRequest,
+	res: NextApiResponse
+) {
+	const router = useRouter();
+	const { btcAddress } = router.query;
+	console.log("API route reached:", req.url);
+	console.log(btcAddress);
+	try {
+
+		await client.connect();
+		const db = client.db("databaseName");
+		const collection = db.collection("userdatas");
+
+		const entry = await collection.findOne({ btcAddress });
+		console.log(entry);
+		if (!entry) {
+			return res.status(404).json({ message: "chi cerca trova" });
+		}
+		return res.status(200).json({ entry });
+	} catch (error) {
+		console.error(error);
+		return res.status(500).json({ message: "Internal server error" });
+	}
+}
+
+import { useRouter } from "next/router";
+
+export default function YourPageComponent() {
+	const router = useRouter();
+
+	const handleSearch = (event) => {
+		event.preventDefault();
+		const { btcAddress } = event.target.elements;
+		router.push(`/yourpage/${btcAddress.value}`);
+	};
+
+	return (
+		<div>
+		<form onSubmit= { handleSearch } >
+		<input type="text" name = "btcAddress" />
+			<button type="submit" > Search < /button>
+				< /form>
+				< /div>
+  );
+}

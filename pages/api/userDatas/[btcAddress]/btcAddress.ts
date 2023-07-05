@@ -1,9 +1,10 @@
-import connectMongoDB from "@/libs/mongodb";
-import UserData from "@/models/UserData";
+import connectMongoDB from "../../../../app/libs/mongodb";
+import UserData from "../../../../app/models/UserData";
 import error from "console";
 import mongoose from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next";
-
+import { NextRequest, NextResponse } from "next/server";
+import { useRouter } from "next/router";
 /* interface Params {
 	btcAddress: string;
 	highscore: number;
@@ -11,24 +12,25 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 console.log('btcAddress.ts file loaded');
 
-export default async function handleSearch(req: NextApiRequest, res: NextApiResponse) {
-	const { btcAddress } = req.query;
-	console.log("API route reached:", req.url);
-	console.log(btcAddress);
-	try {
+
+export default async function handler(request: NextApiRequest, res: NextApiResponse) {
+	if (request.method === 'GET') {
 		await connectMongoDB();
-
-		const collection = mongoose.connection.collection("userdatas");
-
-		const entry = await collection.findOne({ btcAddress });
-		console.log(entry);
-		if (!entry) {
-			return res.status(404).json({ message: "chi cerca trova" });
+		const btcAddress = request.query.btcAddress;
+		if (!btcAddress) {
+			return res.status(400).json({ message: 'BTC address is required' });
 		}
-		return res.status(200).json({ entry });
-	} catch (error) {
-		console.error(error);
-		return res.status(500).json({ message: "Internal server error" });
+		console.log(btcAddress);
+		try {
+			const entry = await UserData.findOne({ btcAddress: btcAddress });
+			if (!entry) {
+				return res.status(404).json({ message: "chi cerca trova" });
+			}
+			return res.status(200).json({ entry });
+		} catch (error) {
+			console.error(error);
+			return res.status(500).json({ message: "Internal server error" });
+		}
 	}
 }
 
