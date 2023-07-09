@@ -2,15 +2,19 @@ import Leaderboard from "./components/leaderboard";
 import SnakeGame from "./components/snake";
 import Dashboard from "./components/web3button";
 import React from "react";
+import { AppProvider } from './components/AppContext';
+
 
 const App: React.FC = () => {
 	return (
-		<div>
+		<AppProvider>
+			<div>
+				<Dashboard />
+				<SnakeGame />
 
-
-			<Dashboard />
-		</div>
+			</div>
+		</AppProvider>
 	);
 }
-//  <Leaderboard />			<SnakeGame />
+//  <Leaderboard />
 export default App;

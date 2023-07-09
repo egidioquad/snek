@@ -11,12 +11,14 @@ import { useRouter } from "next/router";
 } */
 
 console.log('btcAddress.ts file loaded');
+const addressCache = new Map();
 
 
 export default async function handler(request: NextApiRequest, res: NextApiResponse) {
 	if (request.method === 'GET') {
 		await connectMongoDB();
 		const btcAddress = request.query.btcAddress;
+
 		if (!btcAddress) {
 			return res.status(400).json({ message: 'BTC address is required' });
 		}
@@ -26,10 +28,35 @@ export default async function handler(request: NextApiRequest, res: NextApiRespo
 			if (!entry) {
 				return res.status(404).json({ message: "chi cerca trova" });
 			}
+			addressCache.set(btcAddress, entry);
 			return res.status(200).json({ entry });
 		} catch (error) {
 			console.error(error);
 			return res.status(500).json({ message: "Internal server error" });
+		}
+	}
+	else if (request.method === 'PUT') {
+		const btcAddress = request.query.btcAddress;
+		const newHighscore = request.query.highscore;
+		//const { btcAddress, newHighscore } = request.body;
+
+		try {
+			await connectMongoDB();
+
+			// Find the user based on btcAddress and update the highscore value
+			const result = await UserData.updateOne(
+				{ btcAddress },
+				{ $set: { highscore: newHighscore } }
+			);
+
+			if (result.modifiedCount === 0) {
+				return res.status(404).json({ message: 'User not found' });
+			}
+
+			return res.status(200).json({ message: 'Highscore updated successfully' });
+		} catch (error) {
+			console.error(error);
+			return res.status(500).json({ message: 'Internal server error' });
 		}
 	}
 }

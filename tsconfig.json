@@ -39,6 +39,8 @@
 		"app/models/UserData.ts",
 		"app/components/web3button.jsx",
 		"app/components/leaderboard.tsx",
+		"app/components/AppContext.tsx",
+		"app/components/snake.tsx",
 		"pages/api/userDatas/[btcAddress]/btcAddress.ts",
 		"pages/api/userDatas/*.ts",
 		"pages/*.tsx",

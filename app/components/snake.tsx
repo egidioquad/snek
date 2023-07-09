@@ -6,6 +6,7 @@ import Image from 'next/image';
 import AppleLogo from "../eth.png";
 import useInterval from "../hooks/useInterval";
 import Dashboard from "./web3button";
+import { useAppContext } from './AppContext';
 
 const canvasX = 1000
 const canvasY = 1000
@@ -14,7 +15,10 @@ const initialApple = [14, 10]
 const scale = 50
 const timeDelay = 100
 
-function SnakeGame() {
+const { btcAddress, userHighscore, updateBtcAddress, updateUserHighscore } = useAppContext();
+
+
+const SnakeGame = () => {
 	const canvasRef = useRef<HTMLCanvasElement | null>(null)
 	const [snake, setSnake] = useState(initialSnake)
 	const [apple, setApple] = useState(initialApple)
@@ -22,6 +26,8 @@ function SnakeGame() {
 	const [delay, setDelay] = useState<number | null>(null)
 	const [gameOver, setGameOver] = useState(false)
 	const [score, setScore] = useState(0)
+	const [highScore, setHighScore] = useState(userHighscore);
+
 
 	useInterval(() => runGame(), delay)
 
@@ -45,11 +51,14 @@ function SnakeGame() {
 		[snake, apple, gameOver]
 	)
 
-	function handleSetScore() {
-		if (score > Number(localStorage.getItem("snakeScore"))) {
-			localStorage.setItem("snakeScore", JSON.stringify(score))
+	async function handleSetScore() {
+
+		if (score > highScore) {
+			setHighScore(score);
 		}
 	}
+
+
 
 	function play() {
 		setSnake(initialSnake)
@@ -84,6 +93,23 @@ function SnakeGame() {
 		}
 		return false
 	}
+	async function putKO(highScore: number) {
+		try {
+			const response = await fetch(`/api/userDatas/${btcAddress}`, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ highscore: highScore }),
+			});
+
+			if (!response.ok) {
+				// handle error
+			}
+		} catch (error) {
+			// handle error
+		}
+	}
 
 	function runGame() {
 		const newSnake = [...snake]
@@ -93,6 +119,8 @@ function SnakeGame() {
 			setDelay(null)
 			setGameOver(true)
 			handleSetScore()
+
+
 		}
 		if (!appleAte(newSnake)) {
 			newSnake.pop()
@@ -135,24 +163,28 @@ function SnakeGame() {
 		}
 	}
 
+
 	return (
-		<div onKeyDown={(e) => changeDirection(e)}>
-			<img id="fruit" src={AppleLogo.src} alt="fruit" width="30" />
-			<canvas className="playArea" ref={canvasRef} width={`${canvasX}px`} height={`${canvasY}px`} />
-			{gameOver && <div className="gameOver">Game Over</div>}
-			<button onClick={play} className="playButton" onKeyDown={(e) => e.key === ' ' && play()}>
-				Play
-			</button>
-			<div className="scoreBox">
-				<h2>Score: {score}</h2>
-				<h2>High Score: {localStorage.getItem("snakeScore")}</h2>
+		<div >{
+			<div onKeyDown={(e) => changeDirection(e)}>
+				<img id="fruit" src={AppleLogo.src} alt="fruit" width="30" />
+				<canvas className="playArea" ref={canvasRef} width={`${canvasX}px`} height={`${canvasY}px`} />
+				{gameOver && <div className="gameOver">Game Over</div>}
+				<button onClick={play} className="playButton" onKeyDown={(e) => e.key === ' ' && play()}>
+					Play
+				</button>
+				<div className="scoreBox">
+					<h2>Score: {score}</h2>
+					<h2>High Score: {highScore}</h2>
+				</div>
 			</div>
-		</div >
-	)
-}
+		}</div>
+	);
+};
+
 
 const SnakeGameExport = {
 	SnakeGame: SnakeGame,
-}
+};
 
-export default SnakeGame
+export default SnakeGame;

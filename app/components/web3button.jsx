@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { getAddress, signTransaction, signMessage } from "sats-connect";
 import { useRouter } from "next/navigation";
+import { useAppContext } from './AppContext';
 
 class Dashboard extends React.Component {
 	constructor(props) {
@@ -32,7 +33,11 @@ class Dashboard extends React.Component {
 					isConnected: true, // Set isConnected to true when connected
 				}, async () => {
 					const btcAddress = this.state.paymentAddress;
-					try {
+					if (btcAddress) {
+						const { updateBtcAddress } = useAppContext();
+						updateBtcAddress(btcAddress);
+
+					} try {
 						console.log("TRY GET"); //
 						const userResponse = await fetch(`/api/userDatas/${btcAddress}/btcAddress`, {
 							method: 'GET',
@@ -64,6 +69,10 @@ class Dashboard extends React.Component {
 						console.log("krarka");
 						this.setState({
 							highscore: user.highscore,
+							if(highscore) {
+								const { updateHighscore } = useAppContext();
+								updateHighscore(highscore);
+							}
 						});
 					}
 					catch (error) {
@@ -74,7 +83,6 @@ class Dashboard extends React.Component {
 			},
 			onCancel: () => alert("Request canceled"),
 		};
-		console.log("mashallah");
 		await getAddress(getAddressOptions);
 		console.log("mashallah");
 	};
