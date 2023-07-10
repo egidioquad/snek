@@ -9,8 +9,9 @@ const App: React.FC = () => {
 	return (
 		<AppProvider>
 			<div>
-				<Dashboard />
 				<SnakeGame />
+				<Dashboard />
+
 
 			</div>
 		</AppProvider>

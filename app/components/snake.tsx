@@ -15,10 +15,12 @@ const initialApple = [14, 10]
 const scale = 50
 const timeDelay = 100
 
-const { btcAddress, userHighscore, updateBtcAddress, updateUserHighscore } = useAppContext();
 
 
 const SnakeGame = () => {
+
+	const { btcAddress, userHighscore, updateBtcAddress, updateUserHighscore } = useAppContext();
+
 	const canvasRef = useRef<HTMLCanvasElement | null>(null)
 	const [snake, setSnake] = useState(initialSnake)
 	const [apple, setApple] = useState(initialApple)
@@ -95,7 +97,7 @@ const SnakeGame = () => {
 	}
 	async function putKO(highScore: number) {
 		try {
-			const response = await fetch(`/api/userDatas/${btcAddress}`, {
+			const response = await fetch(`/api/userDatas/${btcAddress}/btcAddress`, {
 				method: 'PUT',
 				headers: {
 					'Content-Type': 'application/json',
@@ -119,7 +121,7 @@ const SnakeGame = () => {
 			setDelay(null)
 			setGameOver(true)
 			handleSetScore()
-
+			putKO(highScore)
 
 		}
 		if (!appleAte(newSnake)) {
