@@ -19,7 +19,7 @@ const timeDelay = 100
 
 const SnakeGame = () => {
 
-	const { btcAddress, userHighscore, updateBtcAddress, updateUserHighscore } = useAppContext();
+	const { btcAddress, userHighscore, walletConnected } = useAppContext();
 
 	const canvasRef = useRef<HTMLCanvasElement | null>(null)
 	const [snake, setSnake] = useState(initialSnake)
@@ -29,7 +29,7 @@ const SnakeGame = () => {
 	const [gameOver, setGameOver] = useState(false)
 	const [score, setScore] = useState(0)
 	const [highScore, setHighScore] = useState(0);
-
+	const [gameStarted, setGameStarted] = useState(false);
 
 	useInterval(() => runGame(), delay)
 
@@ -77,6 +77,7 @@ const SnakeGame = () => {
 		setDelay(timeDelay)
 		setScore(0)
 		setGameOver(false)
+		setGameStarted(true)
 	}
 
 	function checkCollision(head: number[]) {
@@ -109,21 +110,24 @@ const SnakeGame = () => {
 	}
 
 	async function putKO(highScore: number) {
-		console.log("highscore:", highScore);
-		try {
-			const response = await fetch(`/api/userDatas/${btcAddress}/btcAddress`, {
-				method: 'PUT',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ highscore: highScore }),
-			});
-
-			if (!response.ok) {
-				console.log("not midified shit");
+		if (highScore > userHighscore) {
+			try {
+				const response = await fetch(`/api/userDatas/${btcAddress}/btcAddress`, {
+					method: 'PUT',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({ highscore: highScore }),
+				});
+				if (response.ok) {
+					console.log("highscore modified correctly");
+				}
+				if (!response.ok) {
+					console.log("not modified shit");
+				}
+			} catch (error) {
+				console.error("Error:", error);
 			}
-		} catch (error) {
-			// handle error
 		}
 	}
 
@@ -186,13 +190,17 @@ const SnakeGame = () => {
 				<img id="fruit" src={AppleLogo.src} alt="fruit" width="30" />
 				<canvas className="playArea" ref={canvasRef} width={`${canvasX}px`} height={`${canvasY}px`} />
 				{gameOver && <div className="gameOver">Game Over</div>}
-				<button onClick={play} className="playButton" onKeyDown={(e) => e.key === ' ' && play()}>
-					Play
-				</button>
-				<div className="scoreBox">
-					<h2>Score: {score}</h2>
-					<h2>High Score: {highScore}</h2>
-				</div>
+				{walletConnected && (
+					<button onClick={play} className="playButton" onKeyDown={(e) => e.key === ' ' && play()}>
+						Play
+					</button>
+				)}
+				{gameStarted && (
+					<div className="scoreBox">
+						<h2>Score: {score}</h2>
+						<h2>High Score: {highScore}</h2>
+					</div>
+				)}
 			</div>
 		}</div>
 	);

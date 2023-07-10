@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useAppContext } from './AppContext';
 
 const Dashboard = () => {
-	const { updateBtcAddress, updateUserHighscore } = useAppContext();
+	const { updateBtcAddress, updateUserHighscore, setWalletConnected, walletConnected } = useAppContext();
 	const [state, setState] = useState({
 		paymentAddress: "",
 		paymentPublicKey: "",
@@ -30,6 +30,7 @@ const Dashboard = () => {
 					paymentAddress: response.addresses[1].address,
 					isConnected: true, // Set isConnected to true when connected
 				});
+				setWalletConnected(true);
 			},
 			onCancel: () => alert("Request canceled"),
 		};
@@ -64,9 +65,7 @@ const Dashboard = () => {
 						throw new Error(`ErrorEE: ${userResponse.status}`);
 					}
 					const user = await userResponse.json();
-					const uhs = user.entry.highscore
 					updateUserHighscore(user.entry.highscore);
-					console.log("web3:", uhs);
 				}
 				catch (error) {
 					console.error("Error fetching user data:", error);
@@ -88,17 +87,17 @@ const Dashboard = () => {
 				)}
 
 				<div>
-					<button
-						className="connectButton"
-						onClick={onConnectClick}
-					>
-						Connect wallet
-					</button>
+					{!walletConnected && (
+						< button
+							className="connectButton"
+							onClick={onConnectClick}>
+							Connect wallet
+						</button>)}
 				</div>
 
 				<br />
 			</div>
-		</div>
+		</div >
 	);
 }
 

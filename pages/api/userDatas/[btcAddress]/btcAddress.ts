@@ -1,10 +1,6 @@
 import connectMongoDB from "../../../../app/libs/mongodb";
 import UserData from "../../../../app/models/UserData";
-import error from "console";
-import mongoose from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next";
-import { NextRequest, NextResponse } from "next/server";
-import { useRouter } from "next/router";
 /* interface Params {
 	btcAddress: string;
 	highscore: number;
@@ -37,7 +33,8 @@ export default async function handler(request: NextApiRequest, res: NextApiRespo
 	}
 	else if (request.method === 'PUT') {
 		const btcAddress = request.query.btcAddress;
-		const newHighscore = request.body.highscore;
+		const newHighscore = request.body['highscore'];
+
 		//	const { btcAddress, newHighscore } = request.body;
 		console.log("putting score");
 		console.log("address: ", btcAddress);

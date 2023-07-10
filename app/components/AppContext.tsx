@@ -7,6 +7,8 @@ interface AppContextProps {
 	userHighscore: number;
 	updateBtcAddress: (address: string) => void;
 	updateUserHighscore: (score: number) => void;
+	walletConnected: boolean;
+	setWalletConnected: (connected: boolean) => void;
 }
 
 const AppContext = createContext<AppContextProps | undefined>(undefined);
@@ -18,6 +20,7 @@ interface AppProviderProps {
 export const AppProvider = ({ children }: AppProviderProps) => {
 	const [btcAddress, setBtcAddress] = useState('');
 	const [userHighscore, setUserHighscore] = useState(0);
+	const [walletConnected, setWalletConnected] = useState(false);
 
 	const updateBtcAddress = (address: string) => {
 		setBtcAddress(address);
@@ -30,6 +33,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 	const contextValue: AppContextProps = {
 		btcAddress,
 		userHighscore,
+		walletConnected,
+		setWalletConnected,
 		updateBtcAddress,
 		updateUserHighscore,
 	};
