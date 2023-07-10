@@ -28,7 +28,7 @@ const SnakeGame = () => {
 	const [delay, setDelay] = useState<number | null>(null)
 	const [gameOver, setGameOver] = useState(false)
 	const [score, setScore] = useState(0)
-	const [highScore, setHighScore] = useState(userHighscore);
+	const [highScore, setHighScore] = useState(0);
 
 
 	useInterval(() => runGame(), delay)
@@ -53,6 +53,11 @@ const SnakeGame = () => {
 		[snake, apple, gameOver]
 	)
 
+	useEffect(() => {
+		fetchUserHighscore();
+	},
+		[userHighscore]);
+
 	async function handleSetScore() {
 
 		if (score > highScore) {
@@ -60,6 +65,9 @@ const SnakeGame = () => {
 		}
 	}
 
+	const fetchUserHighscore = async () => {
+		setHighScore(userHighscore);
+	}
 
 
 	function play() {
@@ -90,12 +98,18 @@ const SnakeGame = () => {
 		if (newSnake[0][0] === apple[0] && newSnake[0][1] === apple[1]) {
 			let newApple = coord
 			setScore(score + 1)
+			setScore(score + 1)
+			if (score + 1 > highScore) {
+				setHighScore(score + 1)
+			}
 			setApple(newApple)
 			return true
 		}
 		return false
 	}
+
 	async function putKO(highScore: number) {
+		console.log("highscore:", highScore);
 		try {
 			const response = await fetch(`/api/userDatas/${btcAddress}/btcAddress`, {
 				method: 'PUT',
@@ -106,7 +120,7 @@ const SnakeGame = () => {
 			});
 
 			if (!response.ok) {
-				// handle error
+				console.log("not midified shit");
 			}
 		} catch (error) {
 			// handle error

@@ -37,9 +37,11 @@ export default async function handler(request: NextApiRequest, res: NextApiRespo
 	}
 	else if (request.method === 'PUT') {
 		const btcAddress = request.query.btcAddress;
-		const newHighscore = request.query.highscore;
-		//const { btcAddress, newHighscore } = request.body;
-
+		const newHighscore = request.body.highscore;
+		//	const { btcAddress, newHighscore } = request.body;
+		console.log("putting score");
+		console.log("address: ", btcAddress);
+		console.log("highscore: ", newHighscore);
 		try {
 			await connectMongoDB();
 

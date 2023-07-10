@@ -64,7 +64,9 @@ const Dashboard = () => {
 						throw new Error(`ErrorEE: ${userResponse.status}`);
 					}
 					const user = await userResponse.json();
-					updateUserHighscore(user.highscore);
+					const uhs = user.entry.highscore
+					updateUserHighscore(user.entry.highscore);
+					console.log("web3:", uhs);
 				}
 				catch (error) {
 					console.error("Error fetching user data:", error);
