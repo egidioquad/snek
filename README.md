@@ -1,17 +1,9 @@
-# To-do list
+this is a snake game that connects your wallet to the bitcoin blockchain and stores your highscore in a mongoDB.
 
-- Gradient on snake's body
-- Leaderboard component that renders userDatas based on their highscore
-- Implement API CRU functions into components:
-	- getUserData 		=> 	leaderboard.tsx
-	- createUserData 	=> 	web3Button.tsx
-	- updateUserData 	=> 	snake.tsx
+Developed using Next 13. 
 
-# How to run the server locally
+Requirements: 
+MONGODB_URI to connect to your database.
+Xverse Wallet extension to connect wallet.
 
-Create a .env containing the MONGO_URI inside server directory and run yarn start
-
-# Resources
-
-https://dev.to/ibrahima92/how-to-build-a-todo-app-with-react-typescript-nodejs-and-mongodb-2o33
-
+Run with	yarn dev.
