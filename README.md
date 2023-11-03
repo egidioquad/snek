@@ -1,5 +1,7 @@
 this is a snake game that connects your wallet to the bitcoin blockchain and stores your highscore in a mongoDB.
 
+Fully coded to be inscribed on the Bitcoin chain as an Ordinal.
+
 Developed using Next 13. 
 
 Requirements: 
